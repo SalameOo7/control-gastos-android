@@ -120,6 +120,46 @@ class DatabaseHelper(context: Context) :
         }
     }
 
+    fun obtenerGastosConCategoria(): List<GastoConCategoria> {
+        val gastos = mutableListOf<GastoConCategoria>()
+        val sql = """
+            SELECT
+                g.id_gasto,
+                g.descripcion,
+                g.monto,
+                g.fecha,
+                g.id_categoria,
+                c.nombre AS nombre_categoria,
+                g.moneda,
+                g.nota
+            FROM gastos AS g
+            INNER JOIN categorias AS c
+                ON g.id_categoria = c.id_categoria
+            ORDER BY g.fecha DESC, g.id_gasto DESC
+        """.trimIndent()
+
+        readableDatabase.rawQuery(sql, null).use { cursor ->
+            while (cursor.moveToNext()) {
+                gastos.add(
+                    GastoConCategoria(
+                        idGasto = cursor.getLong(cursor.getColumnIndexOrThrow("id_gasto")),
+                        descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion")),
+                        monto = cursor.getDouble(cursor.getColumnIndexOrThrow("monto")),
+                        fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha")),
+                        idCategoria = cursor.getLong(cursor.getColumnIndexOrThrow("id_categoria")),
+                        nombreCategoria = cursor.getString(
+                            cursor.getColumnIndexOrThrow("nombre_categoria")
+                        ),
+                        moneda = cursor.getString(cursor.getColumnIndexOrThrow("moneda")),
+                        nota = cursor.getStringOrNull("nota")
+                    )
+                )
+            }
+        }
+
+        return gastos
+    }
+
     fun actualizarGasto(gasto: Gasto): Int {
         return writableDatabase.update(
             "gastos",
