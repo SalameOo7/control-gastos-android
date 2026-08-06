@@ -52,6 +52,111 @@ class DatabaseHelper(context: Context) :
         onCreate(db)
     }
 
+    fun obtenerCategorias(): List<Categoria> {
+        val categorias = mutableListOf<Categoria>()
+        val columnas = arrayOf("id_categoria", "nombre", "descripcion")
+
+        readableDatabase.query(
+            "categorias",
+            columnas,
+            null,
+            null,
+            null,
+            null,
+            "nombre ASC"
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                categorias.add(
+                    Categoria(
+                        idCategoria = cursor.getLong(cursor.getColumnIndexOrThrow("id_categoria")),
+                        nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                        descripcion = cursor.getStringOrNull("descripcion")
+                    )
+                )
+            }
+        }
+
+        return categorias
+    }
+
+    fun insertarGasto(gasto: Gasto): Long {
+        val valores = gasto.toContentValues()
+        return writableDatabase.insertOrThrow("gastos", null, valores)
+    }
+
+    fun obtenerGastoPorId(idGasto: Long): Gasto? {
+        val columnas = arrayOf(
+            "id_gasto",
+            "descripcion",
+            "monto",
+            "fecha",
+            "id_categoria",
+            "moneda",
+            "nota"
+        )
+
+        return readableDatabase.query(
+            "gastos",
+            columnas,
+            "id_gasto = ?",
+            arrayOf(idGasto.toString()),
+            null,
+            null,
+            null
+        ).use { cursor ->
+            if (cursor.moveToFirst()) {
+                Gasto(
+                    idGasto = cursor.getLong(cursor.getColumnIndexOrThrow("id_gasto")),
+                    descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion")),
+                    monto = cursor.getDouble(cursor.getColumnIndexOrThrow("monto")),
+                    fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha")),
+                    idCategoria = cursor.getLong(cursor.getColumnIndexOrThrow("id_categoria")),
+                    moneda = cursor.getString(cursor.getColumnIndexOrThrow("moneda")),
+                    nota = cursor.getStringOrNull("nota")
+                )
+            } else {
+                null
+            }
+        }
+    }
+
+    fun actualizarGasto(gasto: Gasto): Int {
+        return writableDatabase.update(
+            "gastos",
+            gasto.toContentValues(),
+            "id_gasto = ?",
+            arrayOf(gasto.idGasto.toString())
+        )
+    }
+
+    fun eliminarGasto(idGasto: Long): Int {
+        return writableDatabase.delete(
+            "gastos",
+            "id_gasto = ?",
+            arrayOf(idGasto.toString())
+        )
+    }
+
+    private fun Gasto.toContentValues(): ContentValues {
+        return ContentValues().apply {
+            put("descripcion", descripcion)
+            put("monto", monto)
+            put("fecha", fecha)
+            put("id_categoria", idCategoria)
+            put("moneda", moneda)
+            if (nota == null) {
+                putNull("nota")
+            } else {
+                put("nota", nota)
+            }
+        }
+    }
+
+    private fun android.database.Cursor.getStringOrNull(columnName: String): String? {
+        val columnIndex = getColumnIndexOrThrow(columnName)
+        return if (isNull(columnIndex)) null else getString(columnIndex)
+    }
+
     private fun insertInitialCategories(db: SQLiteDatabase): Map<String, Long> {
         val categories = listOf(
             "Alimentación" to "Comidas, supermercado y bebidas",
