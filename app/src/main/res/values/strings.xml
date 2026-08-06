@@ -7,4 +7,23 @@
     <string name="welcome_default">Bienvenido</string>
     <string name="default_user_name">usuario</string>
     <string name="welcome_user">Bienvenido, %1$s</string>
+    <string name="form_title">Nuevo gasto</string>
+    <string name="form_description_hint">Descripción *</string>
+    <string name="form_amount_hint">Monto *</string>
+    <string name="form_date_hint">Fecha (AAAA-MM-DD) *</string>
+    <string name="form_category_label">Categoría</string>
+    <string name="form_currency_label">Moneda</string>
+    <string name="form_note_hint">Nota (opcional)</string>
+    <string name="form_save_button">Guardar</string>
+    <string name="form_cancel_button">Cancelar</string>
+    <string name="form_required_field">Este campo es obligatorio</string>
+    <string name="form_positive_amount">Ingresa un monto numérico mayor que cero</string>
+    <string name="form_invalid_date">Usa una fecha válida con formato AAAA-MM-DD</string>
+    <string name="form_no_categories">No hay categorías disponibles</string>
+    <string name="form_saved">Gasto guardado correctamente</string>
+    <string name="form_save_error">No se pudo guardar el gasto</string>
+    <string-array name="currency_options">
+        <item>USD</item>
+        <item>EUR</item>
+    </string-array>
 </resources>
