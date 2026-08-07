@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ec.edu.istg.controlgastos.data.Categoria
@@ -23,6 +24,7 @@ class FormularioGastoActivity : AppCompatActivity() {
     private lateinit var spinnerCategoria: Spinner
     private lateinit var spinnerMoneda: Spinner
     private lateinit var editTextNota: EditText
+    private var idGastoEnEdicion: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,7 @@ class FormularioGastoActivity : AppCompatActivity() {
         enlazarVistas()
         cargarCategorias()
         configurarMonedas()
+        cargarGastoSiCorresponde()
 
         findViewById<Button>(R.id.buttonGuardar).setOnClickListener {
             guardarGasto()
@@ -48,6 +51,41 @@ class FormularioGastoActivity : AppCompatActivity() {
         spinnerCategoria = findViewById(R.id.spinnerCategoria)
         spinnerMoneda = findViewById(R.id.spinnerMoneda)
         editTextNota = findViewById(R.id.editTextNota)
+    }
+
+    private fun cargarGastoSiCorresponde() {
+        if (!intent.hasExtra(EXTRA_ID_GASTO)) {
+            return
+        }
+
+        val idGasto = intent.getLongExtra(EXTRA_ID_GASTO, INVALID_ID)
+        val gasto = databaseHelper.obtenerGastoPorId(idGasto)
+        if (gasto == null) {
+            Toast.makeText(this, R.string.form_gasto_not_found, Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+
+        idGastoEnEdicion = idGasto
+        findViewById<TextView>(R.id.textViewFormTitle).setText(R.string.form_edit_title)
+        editTextDescripcion.setText(gasto.descripcion)
+        editTextMonto.setText(gasto.monto.toString())
+        editTextFecha.setText(gasto.fecha)
+        editTextNota.setText(gasto.nota.orEmpty())
+
+        val categoriaPosition = categorias.indexOfFirst {
+            it.idCategoria == gasto.idCategoria
+        }
+        if (categoriaPosition >= 0) {
+            spinnerCategoria.setSelection(categoriaPosition)
+        }
+
+        val monedaPosition = (0 until spinnerMoneda.adapter.count).firstOrNull { position ->
+            spinnerMoneda.adapter.getItem(position)?.toString() == gasto.moneda
+        } ?: -1
+        if (monedaPosition >= 0) {
+            spinnerMoneda.setSelection(monedaPosition)
+        }
     }
 
     private fun cargarCategorias() {
@@ -113,8 +151,20 @@ class FormularioGastoActivity : AppCompatActivity() {
         )
 
         try {
-            databaseHelper.insertarGasto(gasto)
-            Toast.makeText(this, R.string.form_saved, Toast.LENGTH_SHORT).show()
+            val idGasto = idGastoEnEdicion
+            if (idGasto == null) {
+                databaseHelper.insertarGasto(gasto)
+                Toast.makeText(this, R.string.form_saved, Toast.LENGTH_SHORT).show()
+            } else {
+                val filasActualizadas = databaseHelper.actualizarGasto(
+                    gasto.copy(idGasto = idGasto)
+                )
+                if (filasActualizadas == 0) {
+                    Toast.makeText(this, R.string.form_update_error, Toast.LENGTH_LONG).show()
+                    return
+                }
+                Toast.makeText(this, R.string.form_updated, Toast.LENGTH_SHORT).show()
+            }
             setResult(RESULT_OK)
             finish()
         } catch (exception: Exception) {
@@ -137,7 +187,14 @@ class FormularioGastoActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        databaseHelper.close()
+        if (::databaseHelper.isInitialized) {
+            databaseHelper.close()
+        }
         super.onDestroy()
+    }
+
+    companion object {
+        const val EXTRA_ID_GASTO = "extra_id_gasto"
+        private const val INVALID_ID = -1L
     }
 }

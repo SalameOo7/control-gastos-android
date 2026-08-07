@@ -18,6 +18,9 @@
             android:name=".FormularioGastoActivity"
             android:exported="false" />
         <activity
+            android:name=".DetalleGastoActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>

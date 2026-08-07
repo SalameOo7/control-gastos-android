@@ -7,7 +7,13 @@
     <string name="welcome_default">Bienvenido</string>
     <string name="default_user_name">usuario</string>
     <string name="welcome_user">Bienvenido, %1$s</string>
+    <string name="main_empty_list">Todavía no hay gastos registrados</string>
+    <string name="main_new_expense">Registrar gasto</string>
+    <string name="item_category">Categoría: %1$s</string>
+    <string name="item_amount">%1$.2f %2$s</string>
+    <string name="item_date">Fecha: %1$s</string>
     <string name="form_title">Nuevo gasto</string>
+    <string name="form_edit_title">Editar gasto</string>
     <string name="form_description_hint">Descripción *</string>
     <string name="form_amount_hint">Monto *</string>
     <string name="form_date_hint">Fecha (AAAA-MM-DD) *</string>
@@ -22,6 +28,25 @@
     <string name="form_no_categories">No hay categorías disponibles</string>
     <string name="form_saved">Gasto guardado correctamente</string>
     <string name="form_save_error">No se pudo guardar el gasto</string>
+    <string name="form_updated">Gasto actualizado correctamente</string>
+    <string name="form_update_error">No se pudo actualizar el gasto</string>
+    <string name="form_gasto_not_found">No se encontró el gasto solicitado</string>
+    <string name="detail_title">Detalle del gasto</string>
+    <string name="detail_description_label">Descripción</string>
+    <string name="detail_amount_label">Monto</string>
+    <string name="detail_date_label">Fecha</string>
+    <string name="detail_category_label">Categoría</string>
+    <string name="detail_currency_label">Moneda</string>
+    <string name="detail_note_label">Nota</string>
+    <string name="detail_no_note">Sin nota</string>
+    <string name="detail_edit_button">Editar</string>
+    <string name="detail_delete_button">Eliminar</string>
+    <string name="detail_delete_title">Eliminar gasto</string>
+    <string name="detail_delete_message">¿Deseas eliminar este gasto?</string>
+    <string name="detail_delete_confirm">Eliminar</string>
+    <string name="detail_delete_cancel">Cancelar</string>
+    <string name="detail_deleted">Gasto eliminado correctamente</string>
+    <string name="detail_not_found">El gasto ya no existe</string>
     <string-array name="currency_options">
         <item>USD</item>
         <item>EUR</item>
