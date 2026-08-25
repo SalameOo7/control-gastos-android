@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">ControlGastos</string>
-    <string name="login_title">Control de gastos</string>
+    <string name="login_title">Control de Gastos</string>
+    <string name="login_subtitle">Gestiona tus finanzas y presupuesto diario</string>
     <string name="login_name_hint">Nombre de usuario</string>
     <string name="login_button">Ingresar</string>
     <string name="login_name_required">Ingresa tu nombre</string>
+    <string name="login_footer">ISTG • Programación Móvil 2026</string>
     <string name="welcome_default">Bienvenido</string>
     <string name="default_user_name">usuario</string>
     <string name="welcome_user">Bienvenido, %1$s</string>
