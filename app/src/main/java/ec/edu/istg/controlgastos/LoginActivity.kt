@@ -14,13 +14,14 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
 
         val savedName = preferences.getString(USER_NAME_KEY, null)
         if (!savedName.isNullOrBlank()) {
             openMainActivity()
             return
         }
+
+        setContentView(R.layout.activity_login)
 
         val nameInput = findViewById<EditText>(R.id.editTextUserName)
         findViewById<Button>(R.id.buttonLogin).setOnClickListener {

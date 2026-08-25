@@ -1,5 +1,6 @@
 package ec.edu.istg.controlgastos
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -8,10 +9,13 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputLayout
 import ec.edu.istg.controlgastos.data.Categoria
 import ec.edu.istg.controlgastos.data.DatabaseHelper
 import ec.edu.istg.controlgastos.data.Gasto
 import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class FormularioGastoActivity : AppCompatActivity() {
@@ -51,10 +55,50 @@ class FormularioGastoActivity : AppCompatActivity() {
         spinnerCategoria = findViewById(R.id.spinnerCategoria)
         spinnerMoneda = findViewById(R.id.spinnerMoneda)
         editTextNota = findViewById(R.id.editTextNota)
+
+        editTextFecha.isFocusable = false
+        editTextFecha.isClickable = true
+        editTextFecha.setOnClickListener {
+            mostrarSelectorFecha()
+        }
+        findViewById<TextInputLayout>(R.id.textInputLayoutFecha)?.setStartIconOnClickListener {
+            mostrarSelectorFecha()
+        }
+    }
+
+    private fun mostrarSelectorFecha() {
+        val fechaTexto = editTextFecha.text.toString().trim()
+        val calendario = Calendar.getInstance()
+
+        if (esFechaValida(fechaTexto)) {
+            try {
+                val partes = fechaTexto.split("-")
+                if (partes.size == 3) {
+                    val anio = partes[0].toInt()
+                    val mes = partes[1].toInt() - 1
+                    val dia = partes[2].toInt()
+                    calendario.set(anio, mes, dia)
+                }
+            } catch (_: Exception) {}
+        }
+
+        DatePickerDialog(
+            this,
+            { _, anio, mes, dia ->
+                val fechaFormateada = String.format(Locale.US, "%04d-%02d-%02d", anio, mes + 1, dia)
+                editTextFecha.setText(fechaFormateada)
+                editTextFecha.error = null
+            },
+            calendario.get(Calendar.YEAR),
+            calendario.get(Calendar.MONTH),
+            calendario.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     private fun cargarGastoSiCorresponde() {
         if (!intent.hasExtra(EXTRA_ID_GASTO)) {
+            val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+            editTextFecha.setText(hoy)
             return
         }
 
