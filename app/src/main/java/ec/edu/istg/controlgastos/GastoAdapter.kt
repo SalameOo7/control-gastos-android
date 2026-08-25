@@ -40,17 +40,10 @@ class GastoAdapter(
 
         fun bind(gasto: GastoConCategoria) {
             textViewDescripcion.text = gasto.descripcion
-            textViewCategoria.text = itemView.context.getString(
-                R.string.item_category,
-                gasto.nombreCategoria
-            )
-            textViewMonto.text = itemView.context.getString(
-                R.string.item_amount,
-                gasto.monto,
-                gasto.moneda
-            ).replace(",", ".")
-            textViewFecha.text = itemView.context.getString(R.string.item_date, gasto.fecha)
-            itemView.contentDescription = gasto.descripcion
+            textViewCategoria.text = gasto.nombreCategoria
+            textViewMonto.text = String.format(Locale.US, "$%.2f %s", gasto.monto, gasto.moneda)
+            textViewFecha.text = gasto.fecha
+            itemView.contentDescription = "${gasto.descripcion}, ${gasto.monto} ${gasto.moneda}"
             itemView.setOnClickListener {
                 onGastoSeleccionado(gasto.idGasto)
             }

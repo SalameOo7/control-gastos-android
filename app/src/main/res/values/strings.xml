@@ -49,13 +49,18 @@
     <string name="detail_not_found">El gasto ya no existe</string>
     <string name="rates_title">Tasas de cambio (Base: USD)</string>
     <string name="rates_status_online">🟢 En línea</string>
-    <string name="rates_status_cached">🟠 Datos en caché</string>
+    <string name="rates_status_cached">🟠 En caché</string>
     <string name="rates_status_offline">🔴 Sin conexión</string>
-    <string name="rates_updated">Actualizado: %1$s</string>
-    <string name="rates_loading">Consultando tasas de cambio...</string>
+    <string name="rates_updated">Sincronizado: %1$s</string>
+    <string name="rates_loading">Consultando tasas...</string>
+    <string name="rates_currency_eur">💶 EUR</string>
+    <string name="rates_currency_cop">🇨🇴 COP</string>
+    <string name="rates_currency_mxn">🇲🇽 MXN</string>
     <string name="rates_format_eur">1 USD = %1$.4f EUR</string>
     <string name="rates_format_cop">1 USD = %1$.2f COP</string>
     <string name="rates_format_mxn">1 USD = %1$.2f MXN</string>
+    <string name="logout_button_desc">Cerrar sesión</string>
+    <string name="logout_success">Sesión cerrada correctamente</string>
     <string name="detail_conversion_title">Conversión de divisa</string>
     <string name="detail_conversion_select">Convertir a:</string>
     <string name="detail_converted_amount">Equivalente: %1$.2f %2$s</string>

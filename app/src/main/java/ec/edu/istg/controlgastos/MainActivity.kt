@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,15 +14,18 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ec.edu.istg.controlgastos.data.DatabaseHelper
 import ec.edu.istg.controlgastos.data.repository.ExchangeRateRepository
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var databaseHelper: DatabaseHelper
     private lateinit var exchangeRateRepository: ExchangeRateRepository
     private lateinit var gastoAdapter: GastoAdapter
     private lateinit var recyclerViewGastos: RecyclerView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var textViewEmptyList: TextView
     private lateinit var textViewRatesStatus: TextView
     private lateinit var textViewRatesUpdate: TextView
@@ -44,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         recyclerViewGastos = findViewById(R.id.recyclerViewGastos)
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
         textViewEmptyList = findViewById(R.id.textViewEmptyList)
         textViewRatesStatus = findViewById(R.id.textViewRatesStatus)
         textViewRatesUpdate = findViewById(R.id.textViewRatesUpdate)
@@ -54,8 +60,16 @@ class MainActivity : AppCompatActivity() {
         recyclerViewGastos.layoutManager = LinearLayoutManager(this)
         recyclerViewGastos.adapter = gastoAdapter
 
+        swipeRefreshLayout.setOnRefreshListener {
+            refrescarDatos()
+        }
+
         findViewById<Button>(R.id.buttonNuevoGasto).setOnClickListener {
             startActivity(Intent(this, FormularioGastoActivity::class.java))
+        }
+
+        findViewById<ImageButton>(R.id.imageButtonLogout).setOnClickListener {
+            cerrarSesion()
         }
 
         val userName = getSharedPreferences(
@@ -80,6 +94,16 @@ class MainActivity : AppCompatActivity() {
         cargarTasasDeCambio()
     }
 
+    private fun refrescarDatos() {
+        if (::databaseHelper.isInitialized) {
+            cargarGastos()
+        }
+        lifecycleScope.launch {
+            consultarTasas()
+            swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
     private fun cargarGastos() {
         val gastos = databaseHelper.obtenerGastosConCategoria()
         gastoAdapter.actualizarLista(gastos)
@@ -89,26 +113,45 @@ class MainActivity : AppCompatActivity() {
 
     private fun cargarTasasDeCambio() {
         lifecycleScope.launch {
-            val result = exchangeRateRepository.getExchangeRates("USD")
-            textViewRatesStatus.text = if (result.isFromCache) {
-                getString(R.string.rates_status_cached)
-            } else {
-                getString(R.string.rates_status_online)
-            }
-
-            textViewRatesUpdate.text = getString(
-                R.string.rates_updated,
-                result.lastUpdated ?: "N/D"
-            )
-
-            val eur = result.rates["EUR"] ?: 0.0
-            val cop = result.rates["COP"] ?: 0.0
-            val mxn = result.rates["MXN"] ?: 0.0
-
-            textViewRateEur.text = getString(R.string.rates_format_eur, eur)
-            textViewRateCop.text = getString(R.string.rates_format_cop, cop)
-            textViewRateMxn.text = getString(R.string.rates_format_mxn, mxn)
+            consultarTasas()
         }
+    }
+
+    private suspend fun consultarTasas() {
+        val result = exchangeRateRepository.getExchangeRates("USD")
+        textViewRatesStatus.text = if (result.isFromCache) {
+            getString(R.string.rates_status_cached)
+        } else {
+            getString(R.string.rates_status_online)
+        }
+
+        textViewRatesUpdate.text = getString(
+            R.string.rates_updated,
+            result.lastUpdated ?: "N/D"
+        )
+
+        val eur = result.rates["EUR"] ?: 0.0
+        val cop = result.rates["COP"] ?: 0.0
+        val mxn = result.rates["MXN"] ?: 0.0
+
+        textViewRateEur.text = if (eur > 0) String.format(Locale.US, "%.3f", eur) else "--"
+        textViewRateCop.text = if (cop > 0) String.format(Locale.US, "%,.1f", cop) else "--"
+        textViewRateMxn.text = if (mxn > 0) String.format(Locale.US, "%.2f", mxn) else "--"
+    }
+
+    private fun cerrarSesion() {
+        getSharedPreferences(LoginActivity.PREFERENCES_NAME, MODE_PRIVATE)
+            .edit()
+            .remove(LoginActivity.USER_NAME_KEY)
+            .apply()
+
+        Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show()
+
+        val intent = Intent(this, LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        finish()
     }
 
     override fun onDestroy() {

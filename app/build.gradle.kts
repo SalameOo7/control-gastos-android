@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
+    implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.material)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)

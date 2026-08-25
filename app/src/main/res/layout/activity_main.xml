@@ -7,17 +7,38 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/textViewWelcome"
+    <LinearLayout
+        android:id="@+id/layoutHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:gravity="center"
-        android:text="@string/welcome_default"
-        android:textAppearance="?attr/textAppearanceHeadlineSmall"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textViewWelcome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/welcome_default"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/imageButtonLogout"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/logout_button_desc"
+            android:padding="10dp"
+            android:src="@drawable/ic_logout" />
+
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardExchangeRates"
@@ -25,18 +46,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="2dp"
+        android:layout_marginTop="12dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewWelcome">
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="14dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -58,7 +79,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rates_status_online"
-                    android:textAppearance="?attr/textAppearanceBodySmall" />
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -69,43 +91,105 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/rates_loading"
                 android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="?android:attr/textColorSecondary" />
+                android:textColor="@color/date_text" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textViewRateEur"
+                <!-- Columna 1: EUR -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
+                    android:background="@drawable/bg_rate_card"
                     android:gravity="center"
-                    android:text="1 USD = -- EUR"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
-                <TextView
-                    android:id="@+id/textViewRateCop"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="1 USD = -- COP"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rates_currency_eur"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="@color/date_text"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/textViewRateMxn"
+                    <TextView
+                        android:id="@+id/textViewRateEur"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="--"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Columna 2: COP -->
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
                     android:layout_weight="1"
+                    android:background="@drawable/bg_rate_card"
                     android:gravity="center"
-                    android:text="1 USD = -- MXN"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rates_currency_cop"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="@color/date_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewRateCop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="--"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Columna 3: MXN -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_rate_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rates_currency_mxn"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="@color/date_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewRateMxn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="--"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -113,17 +197,24 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewGastos"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:clipToPadding="false"
-        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@id/buttonNuevoGasto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardExchangeRates" />
+        app:layout_constraintTop_toBottomOf="@id/cardExchangeRates">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewGastos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="8dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/textViewEmptyList"
