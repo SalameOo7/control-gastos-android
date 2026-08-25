@@ -47,8 +47,31 @@
     <string name="detail_delete_cancel">Cancelar</string>
     <string name="detail_deleted">Gasto eliminado correctamente</string>
     <string name="detail_not_found">El gasto ya no existe</string>
+    <string name="rates_title">Tasas de cambio (Base: USD)</string>
+    <string name="rates_status_online">🟢 En línea</string>
+    <string name="rates_status_cached">🟠 Datos en caché</string>
+    <string name="rates_status_offline">🔴 Sin conexión</string>
+    <string name="rates_updated">Actualizado: %1$s</string>
+    <string name="rates_loading">Consultando tasas de cambio...</string>
+    <string name="rates_format_eur">1 USD = %1$.4f EUR</string>
+    <string name="rates_format_cop">1 USD = %1$.2f COP</string>
+    <string name="rates_format_mxn">1 USD = %1$.2f MXN</string>
+    <string name="detail_conversion_title">Conversión de divisa</string>
+    <string name="detail_conversion_select">Convertir a:</string>
+    <string name="detail_converted_amount">Equivalente: %1$.2f %2$s</string>
+    <string name="detail_exchange_rate_info">Tasa: 1 %1$s = %2$.4f %3$s</string>
+    <string name="detail_conversion_source">API REST: open.er-api.com</string>
+    <string name="detail_conversion_unavailable">Conversión no disponible</string>
     <string-array name="currency_options">
         <item>USD</item>
         <item>EUR</item>
+        <item>COP</item>
+        <item>MXN</item>
+    </string-array>
+    <string-array name="conversion_currencies">
+        <item>EUR</item>
+        <item>USD</item>
+        <item>COP</item>
+        <item>MXN</item>
     </string-array>
 </resources>
